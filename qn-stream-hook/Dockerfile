@@ -19,4 +19,4 @@ RUN npm run build || (echo "No build script found, assuming TypeScript is compil
 EXPOSE 3000
 
 # Command to run the application
-CMD ["npx", "ts-node", "index.ts"]
+CMD ["cd", "qn-stream-hook", "&&", "npx", "ts-node", "index.ts"]
