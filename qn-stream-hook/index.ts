@@ -1,10 +1,7 @@
 // qn-stream-hook/index.ts
 
 import express from 'express';
-import bodyParser from 'body-parser';
 import { ethers } from 'ethers';
-import http from 'http';
-import os from 'os';
 
 // Define the expected structure of the request body
 interface EventRequestBody {
@@ -15,48 +12,7 @@ const app = express();
 const PORT = 3000;
 
 // Middleware to parse JSON bodies
-app.use(bodyParser.json());
-
-// Function to get public IP address
-async function getPublicIpAddress(): Promise<string> {
-    return new Promise((resolve, reject) => {
-      // Using a public API to get the IP address
-      const options = {
-        hostname: 'api.ipify.org',
-        port: 80,
-        path: '/',
-        method: 'GET'
-      };
-  
-      const req = http.request(options, (res) => {
-        let data = '';
-        res.on('data', (chunk) => {
-          data += chunk;
-        });
-        res.on('end', () => {
-          resolve(data.trim());
-        });
-      });
-  
-      req.on('error', (e) => {
-        console.error(`Error fetching public IP: ${e.message}`);
-        // Fallback to local network interfaces
-        const networkInterfaces = os.networkInterfaces();
-        for (const name of Object.keys(networkInterfaces)) {
-          for (const net of networkInterfaces[name] || []) {
-            // Skip internal and non-IPv4 addresses
-            if (!net.internal && net.family === 'IPv4') {
-              resolve(net.address);
-              return;
-            }
-          }
-        }
-        reject('Could not determine IP address');
-      });
-  
-      req.end();
-    });
-  }
+app.use(express.json({limit: '50mb'}));
 
 // Kuru Trade event ABI
 const kuruTradeEventABI = [
@@ -151,12 +107,4 @@ app.post('/', async (req, res) => {
 // Start the server
 app.listen(PORT, '0.0.0.0', async () => {
     console.log(`Server is running on port ${PORT} and bound to all interfaces (0.0.0.0)`);
-  
-    try {
-        const publicIp = await getPublicIpAddress();
-        console.log(`Public IP address: ${publicIp}`);
-        console.log(`Server is accessible at: http://${publicIp}:${PORT}`);
-    } catch (error) {
-        console.error('Failed to get public IP address:', error);
-    }
 });
