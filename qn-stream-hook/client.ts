@@ -3,7 +3,7 @@
 import fetch from 'node-fetch';
 
 // Configuration
-const SERVER_URL = process.env.SERVER_URL || 'https://elderly-virginie-monad-foundation-40cc5854.koyeb.app/';
+const SERVER_URL = "http://localhost:3000" // || 'https://elderly-virginie-monad-foundation-40cc5854.koyeb.app/';
 
 // Sample event data structure that matches what your server expects
 const sampleEventData = {
