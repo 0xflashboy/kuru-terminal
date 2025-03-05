@@ -117,30 +117,30 @@ app.post('/', async (req, res) => {
                         continue;
                     }
                     const eventTopic = log.topics[0].toLowerCase();
-                    if (eventTopic === tradeTopic) {
-                        const [
-                            orderId, 
-                            makerAddress, 
-                            isBuy, 
-                            price, 
-                            updatedSize, 
-                            takerAddress, 
-                            txOrigin, 
-                            filledSize
-                        ] = contract.interface.decodeEventLog('Trade', log.data, log.topics);
-                        tradeEvents.push({
-                            orderId, 
-                            makerAddress, 
-                            isBuy, 
-                            price, 
-                            updatedSize, 
-                            takerAddress, 
-                            txOrigin, 
-                            filledSize
-                        });
-                    } else {
-                        console.log(`Tx hash ${log.transactionHash} log index ${log.logIndex} is not a Kuru trade`);
+                    if (eventTopic != tradeTopic) {
+                        continue
                     }
+                    const [
+                        orderId, 
+                        makerAddress, 
+                        isBuy, 
+                        price, 
+                        updatedSize, 
+                        takerAddress, 
+                        txOrigin, 
+                        filledSize
+                    ] = contract.interface.decodeEventLog('Trade', log.data, log.topics);
+                    tradeEvents.push({
+                        orderId: orderId.toString(), 
+                        makerAddress, 
+                        isBuy, 
+                        price: price.toString(), 
+                        updatedSize: updatedSize.toString(), 
+                        takerAddress, 
+                        txOrigin, 
+                        filledSize: filledSize.toString()
+                    });
+                    console.log(`Tx hash ${log.transactionHash} log index ${log.logIndex} is a Kuru trade`);
                 }
             }
         }
