@@ -18,5 +18,7 @@ RUN npm run build || (echo "No build script found, assuming TypeScript is compil
 # Expose the port the app runs on
 EXPOSE 3000
 
+WORKDIR /usr/src/app/qn-stream-hook
+
 # Command to run the application
-CMD ["cd", "qn-stream-hook", "&&", "npx", "ts-node", "index.ts"]
+CMD ["npx", "ts-node", "index.ts"]
